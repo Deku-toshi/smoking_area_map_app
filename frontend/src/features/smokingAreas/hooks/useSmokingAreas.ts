@@ -22,9 +22,15 @@ export const useSmokingAreas = (params?: SmokingAreaSearchParams): UseSmokingAre
     }
   };
 
+  /* eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
+  // フィルター変更時に喫煙所データを取得する。
+  // refetch内のloading遷移はレンダー内計算で再現できず、useEffectの正当な用途。
+  // refetchはレンダリングごとに再生成され、依存配列に入れると無限ループになるため除外。
+  // 機能拡張時に TanStack Query を採用し、loading遷移・喫煙所データ取得・キャッシュ管理を委譲する設計に変更するかを検討。
   useEffect(() => {
     refetch();
   }, [params?.tobaccoTypeId, params?.electronicOnly]);
+  /* eslint-enable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
 
   return { state, refetch };
 };
